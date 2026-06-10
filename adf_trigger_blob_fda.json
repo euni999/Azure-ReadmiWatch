@@ -1,0 +1,22 @@
+{
+  "name": "tr_blob_fda",
+  "properties": {
+    "annotations": [],
+    "runtimeState": "Started",
+    "pipelines": [
+      {
+        "pipelineReference": {
+          "referenceName": "pl_fda",
+          "type": "PipelineReference"
+        }
+      }
+    ],
+    "type": "BlobEventsTrigger",
+    "typeProperties": {
+      "blobPathBeginsWith": "/raw/blobs/fda_adverse_events.csv",
+      "ignoreEmptyBlobs": true,
+      "scope": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/resourceGroups/rg-rmw/providers/Microsoft.Storage/storageAccounts/strmw3jmcyp",
+      "events": ["Microsoft.Storage.BlobCreated"]
+    }
+  }
+}

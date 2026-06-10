@@ -1,0 +1,444 @@
+{
+  "name": "pl_rmw_ingest",
+  "properties": {
+    "activities": [
+      {
+        "name": "Adminssions",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Patients",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "AzureBlobStorageReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            }
+          },
+          "sink": {
+            "type": "AzureSqlSink",
+            "writeBehavior": "insert",
+            "sqlWriterUseTableLock": false
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "encounter_id",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "encounter_id",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "patient_nbr",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "patient_nbr",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "admission_type_id",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "admission_type_id",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "discharge_disposition_id",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "discharge_disposition_id",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "time_in_hospital",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "time_in_hospital",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "readmitted",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "readmitted",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "admissions_data",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "ds_sql_admissions",
+            "type": "DatasetReference"
+          }
+        ]
+      },
+      {
+        "name": "Patients",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "AzureBlobStorageReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            }
+          },
+          "sink": {
+            "type": "AzureSqlSink",
+            "writeBehavior": "insert",
+            "sqlWriterUseTableLock": false,
+            "disableMetricsCollection": false
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "patient_nbr",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "patient_nbr",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "race",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "race",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              },
+              {
+                "source": {
+                  "name": "gender",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "gender",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              },
+              {
+                "source": {
+                  "name": "age",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "age",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "patients_data",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "sql_patients",
+            "type": "DatasetReference"
+          }
+        ]
+      },
+      {
+        "name": "medications",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Adminssions",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "AzureBlobStorageReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            }
+          },
+          "sink": {
+            "type": "AzureSqlSink",
+            "writeBehavior": "insert",
+            "sqlWriterUseTableLock": false
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "encounter_id",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "encounter_id",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "insulin",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "insulin",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              },
+              {
+                "source": {
+                  "name": "metformin",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "metformin",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "medications_data",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "sql_medications",
+            "type": "DatasetReference"
+          }
+        ]
+      },
+      {
+        "name": "diagnoses",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Adminssions",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "AzureBlobStorageReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            }
+          },
+          "sink": {
+            "type": "AzureSqlSink",
+            "writeBehavior": "insert",
+            "sqlWriterUseTableLock": false
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "encounter_id",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "encounter_id",
+                  "type": "Int32",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "diag_1",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "diag_1",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              },
+              {
+                "source": {
+                  "name": "diag_2",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "diag_2",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              },
+              {
+                "source": {
+                  "name": "diag_3",
+                  "type": "String",
+                  "physicalType": "String"
+                },
+                "sink": {
+                  "name": "diag_3",
+                  "type": "String",
+                  "physicalType": "nvarchar"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "diagnoses_data",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "sql_diagnoses",
+            "type": "DatasetReference"
+          }
+        ]
+      }
+    ],
+    "annotations": []
+  }
+}

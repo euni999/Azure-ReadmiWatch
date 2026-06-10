@@ -1,0 +1,61 @@
+{
+  "name": "df_fda_transform",
+  "properties": {
+    "type": "MappingDataFlow",
+    "typeProperties": {
+      "sources": [
+        {
+          "dataset": {
+            "referenceName": "fda",
+            "type": "DatasetReference"
+          },
+          "name": "source1"
+        }
+      ],
+      "sinks": [
+        {
+          "dataset": {
+            "referenceName": "ls_sql_rmw",
+            "type": "DatasetReference"
+          },
+          "name": "sink1"
+        }
+      ],
+      "transformations": [
+        {
+          "name": "RemoveNoise"
+        },
+        {
+          "name": "MakeUpper"
+        }
+      ],
+      "scriptLines": [
+        "source(output(",
+        "          drug as string,",
+        "          reaction as string,",
+        "          count as string",
+        "     ),",
+        "     allowSchemaDrift: true,",
+        "     validateSchema: false,",
+        "     ignoreNoFilesFound: false) ~> source1",
+        "source1 filter(toInteger(count) >= 1000) ~> RemoveNoise",
+        "RemoveNoise derive(drug = upper(drug)) ~> MakeUpper",
+        "MakeUpper sink(allowSchemaDrift: true,",
+        "     validateSchema: false,",
+        "     input(",
+        "          drug as string,",
+        "          reaction as string,",
+        "          count as integer",
+        "     ),",
+        "     deletable:false,",
+        "     insertable:true,",
+        "     updateable:false,",
+        "     upsertable:false,",
+        "     format: 'table',",
+        "     skipDuplicateMapInputs: true,",
+        "     skipDuplicateMapOutputs: true,",
+        "     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+      ]
+    }
+  }
+}

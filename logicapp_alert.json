@@ -1,0 +1,80 @@
+{
+  "definition": {
+    "metadata": {
+      "notes": {}
+    },
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "When_an_HTTP_request_is_received": {
+        "type": "Request",
+        "kind": "Http"
+      }
+    },
+    "actions": {
+      "파이프라인_실행_취소": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['azuredatafactory']['connectionId']"
+            }
+          },
+          "method": "post",
+          "path": "/subscriptions/@{encodeURIComponent('27db5ec6-d206-4028-b5e1-6004dca5eeef')}/resourcegroups/@{encodeURIComponent('rg-rmw')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('adf-rmw')}/cancelpipelineRun/@{encodeURIComponent('pl_fda')}",
+          "queries": {
+            "x-ms-api-version": "2017-09-01-preview"
+          }
+        },
+        "runAfter": {}
+      },
+      "채팅_또는_채널에서_메시지_게시": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['teams']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "recipient": {
+              "groupId": "",
+              "channelId": ""
+            },
+            "messageBody": "<p class=\"editor-paragraph\">ReadmitWatch ADF 파이프라인 실패<br>시간: 확인 필요<br>Azure Portal에서 모니터링 탭 확인하세요.</p>"
+          },
+          "path": "/beta/teams/conversation/message/poster/Flow bot/location/@{encodeURIComponent('Channel')}"
+        },
+        "runAfter": {
+          "파이프라인_실행_취소": ["Succeeded"]
+        }
+      }
+    },
+    "parameters": {
+      "$connections": {
+        "type": "Object",
+        "defaultValue": {}
+      }
+    }
+  },
+  "parameters": {
+    "$connections": {
+      "type": "Object",
+      "value": {
+        "azuredatafactory": {
+          "id": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/providers/Microsoft.Web/locations/koreacentral/managedApis/azuredatafactory",
+          "connectionId": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/resourceGroups/rg-rmw/providers/Microsoft.Web/connections/azuredatafactory",
+          "connectionName": "azuredatafactory",
+          "connectionProperties": {}
+        },
+        "teams": {
+          "id": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/providers/Microsoft.Web/locations/koreacentral/managedApis/teams",
+          "connectionId": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/resourceGroups/rg-rmw/providers/Microsoft.Web/connections/teams",
+          "connectionName": "teams",
+          "connectionProperties": {}
+        }
+      }
+    }
+  }
+}
