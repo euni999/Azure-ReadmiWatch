@@ -36,3 +36,4 @@ def fetch_fda(timer: func.TimerRequest) -> None:
         csv_buf.getvalue(), overwrite=True
     )
     logging.info(f"FDA 데이터 업로드 완료: {len(rows)}행")
+# test
