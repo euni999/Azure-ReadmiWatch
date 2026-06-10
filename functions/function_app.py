@@ -8,12 +8,15 @@ import logging
 
 app = func.FunctionApp()
 
+# 당뇨 관련 약물 목록 (FDA API 조회 대상)
+DIABETES_DRUGS = ['insulin', 'metformin', 'glipizide', 'glyburide', 'pioglitazone', 'rosiglitazone']
+
 @app.timer_trigger(schedule="0 0 * * * *", arg_name="timer")
 def fetch_fda(timer: func.TimerRequest) -> None:
-    drugs = ['insulin', 'metformin', 'glipizide', 'glyburide', 'pioglitazone', 'rosiglitazone']
+    """매시간 FDA API에서 약물 부작용 상위 5건을 수집해 Blob Storage에 저장"""
     rows = []
 
-    for drug in drugs:
+    for drug in DIABETES_DRUGS:
         res = requests.get(
             "https://api.fda.gov/drug/event.json",
             params={
@@ -25,6 +28,12 @@ def fetch_fda(timer: func.TimerRequest) -> None:
         if res.status_code == 200:
             for item in res.json().get('results', []):
                 rows.append({'drug': drug.upper(), 'reaction': item['term'], 'count': item['count']})
+        else:
+            logging.warning(f"FDA API 요청 실패 - drug={drug}, status={res.status_code}")
+
+    if not rows:
+        logging.warning("수집된 FDA 데이터 없음. Blob 업로드 건너뜀.")
+        return
 
     df = pd.DataFrame(rows)
     csv_buf = io.StringIO()
@@ -36,4 +45,3 @@ def fetch_fda(timer: func.TimerRequest) -> None:
         csv_buf.getvalue(), overwrite=True
     )
     logging.info(f"FDA 데이터 업로드 완료: {len(rows)}행")
-# test

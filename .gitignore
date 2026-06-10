@@ -3,3 +3,10 @@ terraform.tfvars
 *.tfstate.backup
 .terraform/
 local.settings.json
+data/
+.venv/
+*.twb
+*.twbr
+__pycache__/
+.terraform.lock.hcl
+.DS_Store

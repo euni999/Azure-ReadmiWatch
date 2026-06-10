@@ -21,7 +21,7 @@
             }
           },
           "method": "post",
-          "path": "/subscriptions/@{encodeURIComponent('27db5ec6-d206-4028-b5e1-6004dca5eeef')}/resourcegroups/@{encodeURIComponent('rg-rmw')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('adf-rmw')}/cancelpipelineRun/@{encodeURIComponent('pl_fda')}",
+          "path": "/subscriptions/@{encodeURIComponent('<YOUR_SUBSCRIPTION_ID>')}/resourcegroups/@{encodeURIComponent('rg-rmw')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('adf-rmw')}/cancelpipelineRun/@{encodeURIComponent('pl_fda')}",
           "queries": {
             "x-ms-api-version": "2017-09-01-preview"
           }
@@ -63,14 +63,14 @@
       "type": "Object",
       "value": {
         "azuredatafactory": {
-          "id": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/providers/Microsoft.Web/locations/koreacentral/managedApis/azuredatafactory",
-          "connectionId": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/resourceGroups/rg-rmw/providers/Microsoft.Web/connections/azuredatafactory",
+          "id": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/providers/Microsoft.Web/locations/koreacentral/managedApis/azuredatafactory",
+          "connectionId": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/rg-rmw/providers/Microsoft.Web/connections/azuredatafactory",
           "connectionName": "azuredatafactory",
           "connectionProperties": {}
         },
         "teams": {
-          "id": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/providers/Microsoft.Web/locations/koreacentral/managedApis/teams",
-          "connectionId": "/subscriptions/27db5ec6-d206-4028-b5e1-6004dca5eeef/resourceGroups/rg-rmw/providers/Microsoft.Web/connections/teams",
+          "id": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/providers/Microsoft.Web/locations/koreacentral/managedApis/teams",
+          "connectionId": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/rg-rmw/providers/Microsoft.Web/connections/teams",
           "connectionName": "teams",
           "connectionProperties": {}
         }

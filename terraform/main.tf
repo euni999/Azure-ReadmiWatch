@@ -68,7 +68,7 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "blob_ls" {
 resource "azurerm_data_factory_linked_service_sql_server" "sql_ls" {
   name            = "ls_sql_rmw"
   data_factory_id = azurerm_data_factory.adf.id
-  connection_string = "Server=tcp:sql-rmw.database.windows.net,1433;Initial Catalog=db-rmw;User ID=${var.sql_admin};Password=${var.sql_password};"
+  connection_string = "Server=tcp:${azurerm_mssql_server.sql.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.db.name};User ID=${var.sql_admin};Password=${var.sql_password};"
 }
 
 # Function App용 Storage Account

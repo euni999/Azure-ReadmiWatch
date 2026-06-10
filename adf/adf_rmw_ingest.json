@@ -3,7 +3,7 @@
   "properties": {
     "activities": [
       {
-        "name": "Adminssions",
+        "name": "Admissions",
         "type": "Copy",
         "dependsOn": [
           {
@@ -241,7 +241,7 @@
         "type": "Copy",
         "dependsOn": [
           {
-            "activity": "Adminssions",
+            "activity": "Admissions",
             "dependencyConditions": ["Succeeded"]
           }
         ],
@@ -336,7 +336,7 @@
         "type": "Copy",
         "dependsOn": [
           {
-            "activity": "Adminssions",
+            "activity": "Admissions",
             "dependencyConditions": ["Succeeded"]
           }
         ],
